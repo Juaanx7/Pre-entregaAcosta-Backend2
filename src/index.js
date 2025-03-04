@@ -1,37 +1,71 @@
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import morgan from "morgan";
-import usersRouter from "./routes/users.routes.js";
-import connectDB from "./config/db.js";
-import authRouter from "./routes/auth.routes.js";
+import { engine } from "express-handlebars";
+import path from "path";
 import passport from "passport";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+
 import "./config/passport.js";
+import authRouter from "./routes/auth.routes.js";
+import usersRouter from "./routes/users.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import productsRouter from "./routes/products.routes.js";
+import viewsRouter from "./routes/views.routes.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-// Middleware
+// Conectar a MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log("🟢 Conectado a MongoDB");
+  } catch (error) {
+    console.error("🔴 Error al conectar a MongoDB:", error.message);
+    process.exit(1);
+  }
+};
+
+connectDB();
+
+// Manejo de eventos de conexión
+mongoose.connection.on("connected", () => {
+  console.log("🟢 MongoDB conectado correctamente");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("🔴 Error en la conexión con MongoDB:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.warn("⚠️ MongoDB desconectado");
+});
+
+// Handlebars
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", path.join(path.resolve(), "src/views"));
+
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(cors());
-app.use(morgan("dev"));
-app.use("/api/auth", authRouter);
 app.use(passport.initialize());
+
+// Rutas API
+app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
 
-// Rutas
-app.use("/api/users", usersRouter);
+// Rutas de vistas con Handlebars
+app.use("/", viewsRouter);
 
-// Servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

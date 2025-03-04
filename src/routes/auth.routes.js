@@ -8,11 +8,11 @@ const router = express.Router();
 router.post("/login", (req, res, next) => {
   passport.authenticate("login", { session: false }, (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.status(400).json({ message: info.message });
+    if (!user) return res.redirect("/login?error=1");
 
     // Generar JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { id: user._id, email: user.email, role: user.role, first_name: user.first_name, last_name: user.last_name },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -22,10 +22,10 @@ router.post("/login", (req, res, next) => {
       httpOnly: true,
       signed: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000,
+      maxAge: 3600000, // 1 hora
     });
 
-    res.json({ message: "Login exitoso con Passport", token });
+    res.redirect("/current");
   })(req, res, next);
 });
 
