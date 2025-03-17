@@ -3,6 +3,11 @@ import passport from "passport";
 
 const router = express.Router();
 
+// 📌 Página de inicio - Redirigir al login
+router.get("/", (req, res) => {
+  res.redirect("/login");
+});
+
 // Página de login
 router.get("/login", (req, res) => {
   res.render("login");
