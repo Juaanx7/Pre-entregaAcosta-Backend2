@@ -8,7 +8,7 @@ import { generateCode } from "../utils/generateCode.js";
 
 const router = express.Router();
 
-// 🔓 Crear un carrito vacío (abierto o podría protegerse si querés)
+// Crear un carrito vacio
 router.post("/", async (req, res) => {
   try {
     const newCart = new Cart({ products: [] });
@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 🔓 Obtener un carrito por ID
+// Obtener un carrito por ID
 router.get("/:id", async (req, res) => {
   try {
     const cart = await Cart.findById(req.params.id).populate("products.product");
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 🔐 Agregar un producto a un carrito → SOLO usuario autenticado con rol "user"
+// Agregar un producto a un carrito
 router.post(
   "/:cartId/product/:productId",
   passport.authenticate("jwt", { session: false }),
@@ -61,7 +61,7 @@ router.post(
   }
 );
 
-// 🔐 Eliminar un producto del carrito
+// Eliminar un producto del carrito
 router.delete(
   "/:cartId/product/:productId",
   passport.authenticate("jwt", { session: false }),
@@ -83,7 +83,7 @@ router.delete(
   }
 );
 
-// 🔐 Vaciar completamente el carrito
+// Vaciar completamente el carrito
 router.delete(
   "/:cartId",
   passport.authenticate("jwt", { session: false }),
@@ -105,7 +105,7 @@ router.delete(
   }
 );
 
-// 🔐 Finalizar compra de un carrito
+// Finalizar compra de un carrito
 router.post(
   "/:cid/purchase",
   passport.authenticate("jwt", { session: false }),

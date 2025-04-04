@@ -5,7 +5,7 @@ import Ticket from "../dao/models/Ticket.js";
 
 const router = express.Router();
 
-// Obtener todos los tickets (solo admin)
+// Obtener todos los tickets
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),

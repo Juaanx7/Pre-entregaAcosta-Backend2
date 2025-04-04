@@ -6,7 +6,7 @@ import Cart from "../dao/models/Cart.js";
 
 const router = express.Router();
 
-// Obtener todos los usuarios (Solo autenticados con Passport JWT)
+// Obtener todos los usuarios
 router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
   try {
     const users = await User.find();
@@ -16,7 +16,7 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
   }
 });
 
-// Obtener un usuario por ID (Solo autenticados)
+// Obtener un usuario por ID
 router.get("/:id", passport.authenticate("jwt", { session: false }), async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Actualizar un usuario por ID (Solo autenticados)
+// Actualizar un usuario por I
 router.put("/:id", passport.authenticate("jwt", { session: false }), async (req, res) => {
   try {
     const { first_name, last_name, email, age, password, role } = req.body;
@@ -76,7 +76,7 @@ router.put("/:id", passport.authenticate("jwt", { session: false }), async (req,
   }
 });
 
-// Eliminar un usuario por ID (Solo autenticados)
+// Eliminar un usuario por ID
 router.delete("/:id", passport.authenticate("jwt", { session: false }), async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);

@@ -5,7 +5,7 @@ import { authorizeRoles } from "../middleware/role.middleware.js";
 
 const router = express.Router();
 
-// 🔐 Crear un producto → SOLO admin
+// Crear un producto
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -22,7 +22,7 @@ router.post(
   }
 );
 
-// 🟢 Obtener todos los productos → acceso público
+// Obtener todos los productos
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 🟢 Obtener un producto por ID → acceso público
+// Obtener un producto por ID
 router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -44,7 +44,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// 🔐 Actualizar un producto → SOLO admin
+// Actualizar un producto
 router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -61,7 +61,7 @@ router.put(
   }
 );
 
-// 🔐 Eliminar un producto → SOLO admin
+// Eliminar un producto
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),

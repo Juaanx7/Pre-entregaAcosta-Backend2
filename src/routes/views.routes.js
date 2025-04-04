@@ -3,7 +3,7 @@ import passport from "passport";
 
 const router = express.Router();
 
-// 📌 Página de inicio - Redirigir al login
+// Pagina de inicio
 router.get("/", (req, res) => {
   res.redirect("/login");
 });
@@ -13,7 +13,7 @@ router.get("/login", (req, res) => {
   res.render("login");
 });
 
-// Página de perfil (protegida con JWT)
+// Página de perfil
 router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
   res.render("current", { 
     user: {
