@@ -1,8 +1,8 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import User from "../models/User.js";
+import User from "../dao/models/User.js";
 import passport from "passport";
-import Cart from "../models/Cart.js";
+import Cart from "../dao/models/Cart.js";
 
 const router = express.Router();
 

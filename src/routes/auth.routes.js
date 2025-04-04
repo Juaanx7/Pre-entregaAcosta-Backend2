@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import UserDTO from "../dao/dtos/UserDTO.js";
 
 const router = express.Router();
 
@@ -22,23 +23,19 @@ router.post("/login", (req, res, next) => {
       httpOnly: true,
       signed: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000, // 1 hora
+      maxAge: 3600000,
     });
 
     res.redirect("/current");
   })(req, res, next);
 });
 
-// Ruta protegida con Passport JWT para obtener el usuario autenticado
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.json({ message: "Usuario autenticado con Passport JWT", user: req.user });
-  }
-);
+router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
+  const userDTO = new UserDTO(req.user);
+  res.json({ user: userDTO });
+});
 
-// Ruta para cerrar sesión (Logout)
+// Ruta para cerrar sesion
 router.post("/logout", (req, res) => {
   res.clearCookie("currentUser", { path: "/" });
   res.json({ message: "Sesión cerrada exitosamente" });
