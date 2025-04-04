@@ -12,6 +12,7 @@ import usersRouter from "./routes/users.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import viewsRouter from "./routes/views.routes.js";
+import ticketsRouter from "./routes/tickets.routes.js";
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/tickets", ticketsRouter);
 
 // Rutas de vistas con Handlebars
 app.use("/", viewsRouter);
