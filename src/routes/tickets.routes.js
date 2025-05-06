@@ -1,23 +1,8 @@
 import express from "express";
-import passport from "passport";
-import { authorizeRoles } from "../middleware/role.middleware.js";
-import Ticket from "../dao/models/Ticket.js";
+import { getAllTickets } from "../controllers/tickets.controller.js";
 
 const router = express.Router();
 
-// Obtener todos los tickets
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  authorizeRoles("admin"),
-  async (req, res) => {
-    try {
-      const tickets = await Ticket.find().sort({ purchase_datetime: -1 }).lean();
-      res.json({ tickets });
-    } catch (error) {
-      res.status(500).json({ message: "Error al obtener los tickets", error: error.message });
-    }
-  }
-);
+router.get("/", getAllTickets);
 
 export default router;
